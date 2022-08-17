@@ -13,7 +13,7 @@
 
 PWMBoard PWMBoards[NumberOfPWMBoards];
 
-//Only use 1 on a Mega as it has multiple serial buses
+//Only use Serial1 on a Mega as it has multiple serial buses
 Auto485 bus(DE_PIN,Serial1); // Arduino pin 2 -> MAX485 DE and RE pins
 CMRI cmri(CMRI_ADDR, 64, 32, bus); // defaults to a SMINI with address 0. SMINI = 24 inputs, 48 outputs
 
@@ -31,7 +31,7 @@ void setup() {
     bool cmriIsInitialised = false;
     while (!cmriIsInitialised) {
        cmriIsInitialised = cmri.process();
-       //Serial.println("Not ready");
+       Serial.println("Not ready");
     }
 }
 
@@ -228,23 +228,6 @@ void ProcessPointsMoveWithSpeedControl(int board, int pin, int requiredPosition)
             //Serial.println("Points move required but denied on board "+String(board)+", device " + String(pin) + " to position " + String(requiredPosition) + " due to invalid defined value in settings.");
         }
     }
-    else {
-      //set feedback sensor bit if using
-      if (PWMBoards[board].turnouts[pin].hasFeedbackSensor) {
-        int inputPin = PWMBoards[board].turnouts[pin].feedbackSensorPin;
-        bool pinValue = false;
-        if (PWMBoards[board].turnouts[pin].invertFeedbackSensor == true) {
-           pinValue = !digitalRead(inputPin);
-        }
-        else {
-          pinValue = digitalRead(inputPin);
-        }
-
-        //Serial.println("Setting feedback sensor for CMRI bit "+String(pin+PWMBoards[board].CMRIIndexModifier)+" to "+String(pinValue));
-        cmri.set_bit(pin+PWMBoards[board].CMRIIndexModifier, pinValue);
-        PWMBoards[board].turnouts[pin].lastFeedbackSensorReading = pinValue;
-      }
-    }
 }
 
 void SetSensorFeedbackReadings() {
@@ -264,8 +247,7 @@ void SetSensorFeedbackReadings() {
             PWMBoards[pwmIndex].turnouts[i].lastFeedbackSensorReading = pinValue;
             //Serial.println("Setting feedback sensor for board "+String(pwmIndex)+", turnout  "+String(i)+" to "+String(pinValue));
           }
-       }
-               
+       }               
     }
   }
 }
