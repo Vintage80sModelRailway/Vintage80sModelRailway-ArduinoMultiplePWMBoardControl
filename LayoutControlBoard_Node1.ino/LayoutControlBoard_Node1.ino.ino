@@ -13,7 +13,7 @@
 
 PWMBoard PWMBoards[NumberOfPWMBoards];
 
-//Only use Serial1 on a Mega as it has multiple serial buses
+//Only use 1 on a Mega as it has multiple serial buses
 Auto485 bus(DE_PIN,Serial1); // Arduino pin 2 -> MAX485 DE and RE pins
 CMRI cmri(CMRI_ADDR, 64, 32, bus); // defaults to a SMINI with address 0. SMINI = 24 inputs, 48 outputs
 
@@ -22,7 +22,7 @@ void setup() {
     SetPinModes();    
     
     bus.begin(115200, SERIAL_8N2);
-    Serial.begin(115200);
+    //Serial.begin(115200);
 
     SetSensorFeedbackReadings();
     //Serial.println("CMRI Address "+String(CMRI_ADDR));    
@@ -31,7 +31,7 @@ void setup() {
     bool cmriIsInitialised = false;
     while (!cmriIsInitialised) {
        cmriIsInitialised = cmri.process();
-       Serial.println("Not ready");
+       //Serial.println("Not ready");
     }
 }
 
@@ -39,7 +39,7 @@ void loop() {
   // put your main code here, to run repeatedly:
 
   //debug
-  Serial.println("Ready");
+  //Serial.println("Ready");
   //Serial.println("Value of pin 34 input sensor is "+String(digitalRead(8)));
   
   cmri.process();
