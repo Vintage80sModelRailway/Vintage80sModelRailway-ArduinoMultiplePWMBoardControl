@@ -85,7 +85,8 @@ void loop() {
     else
     {
       startupDelayComplete = true;
-      //Serial.println("Delay complete");      
+      //Serial.println("Delay complete");     
+
     }
   }
   
@@ -408,6 +409,7 @@ void InitialiseConfig() {
   PWMBoards[0].turnouts[3] = Turnout(1150,2000,10,true); //thrown, closed, invertfrog 
   PWMBoards[0].turnouts[4] = Turnout(1250,1700,8,false); //thrown, closed, invertfrog 
   PWMBoards[0].turnouts[5] = Turnout(1200,1810,9,true); //thrown, closed, invertfrog  
+
   PWMBoards[0].turnouts[6] = Turnout(1200,1850,6,false); //thrown, closed, invertfrog  
   PWMBoards[0].turnouts[7] = Turnout(1250,2000,5,true); //thrown, closed, invertfrog  
 

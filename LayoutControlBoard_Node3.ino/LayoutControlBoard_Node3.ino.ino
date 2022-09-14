@@ -85,7 +85,6 @@ void loop() {
     else
     {
       startupDelayComplete = true;
-      //Serial.println("Delay complete");     
     }
   }
   
@@ -422,6 +421,7 @@ void ProcessInputs() {
      // Do not read 0, 1 or 2
      //Do not read 13
      //Do not read 20 or 21  
+
 
      cmri.set_bit(11,digitalRead(11));  //Bit 1 = address 1002 in JMRI
      cmri.set_bit(12,digitalRead(12));  //Bit 1 = address 1002 in JMRI
