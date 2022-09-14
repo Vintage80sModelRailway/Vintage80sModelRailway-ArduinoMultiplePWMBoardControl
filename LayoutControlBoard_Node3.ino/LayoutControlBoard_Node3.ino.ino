@@ -85,18 +85,6 @@ void loop() {
     else
     {
       startupDelayComplete = true;
-      //Serial.println("Delay complete");
-      for (int pwmIndex = 0; pwmIndex < NumberOfPWMBoards; pwmIndex++) {
-        //for each servo on this PWM board
-        for (int i = 0; i < PWMBoards[pwmIndex].numberOfServos; i++)
-        {
-          if (!PWMBoards[pwmIndex].turnouts[i].hasFeedbackSensor) 
-          {
-            SetRelayAccordingToCMRIBitValue(pwmIndex,i,cmri.get_bit(i+PWMBoards[pwmIndex].CMRIIndexModifier));
-
-          }
-        }
-      }      
     }
   }
   
@@ -114,7 +102,7 @@ void loop() {
     for (int i = 0; i < PWMBoards[pwmIndex].numberOfServos; i++)
     {
         int deviceStatusFromJMRI = cmri.get_bit(i+PWMBoards[pwmIndex].CMRIIndexModifier);
-        if (deviceStatusFromJMRI != PWMBoards[pwmIndex].turnouts[i].lastKnownBitValue)
+        if (deviceStatusFromJMRI != PWMBoards[pwmIndex].turnouts[i].lastKnownBitValue || PWMBoards[pwmIndex].turnouts[i].motorHasNotMovedYet)
         {
           //Serial.println("Bit value change on board "+String(pwmIndex)+", device " + String(i) + " JMRI status "+String(deviceStatusFromJMRI)+" last known bit "+String( PWMBoards[pwmIndex].turnouts[i].lastKnownBitValue)+" motor not moved yet "+String(PWMBoards[pwmIndex].turnouts[i].motorHasNotMovedYet));
           if (deviceStatusFromJMRI == 1)
@@ -434,7 +422,8 @@ void ProcessInputs() {
      //Do not read 13
      //Do not read 20 or 21  
 
-     cmri.set_bit(11,digitalRead(30));  //Bit 1 = address 1002 in JMRI
+
+     cmri.set_bit(11,digitalRead(11));  //Bit 1 = address 1002 in JMRI
      cmri.set_bit(12,digitalRead(12));  //Bit 1 = address 1002 in JMRI
      cmri.set_bit(14,digitalRead(14));  //Bit 1 = address 1002 in JMRI
 }

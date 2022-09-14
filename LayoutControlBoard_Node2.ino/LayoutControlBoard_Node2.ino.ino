@@ -85,18 +85,8 @@ void loop() {
     else
     {
       startupDelayComplete = true;
-      //Serial.println("Delay complete");
-      for (int pwmIndex = 0; pwmIndex < NumberOfPWMBoards; pwmIndex++) {
-        //for each servo on this PWM board
-        for (int i = 0; i < PWMBoards[pwmIndex].numberOfServos; i++)
-        {
-          if (!PWMBoards[pwmIndex].turnouts[i].hasFeedbackSensor) 
-          {
-            SetRelayAccordingToCMRIBitValue(pwmIndex,i,cmri.get_bit(i+PWMBoards[pwmIndex].CMRIIndexModifier));
+      //Serial.println("Delay complete");     
 
-          }
-        }
-      }      
     }
   }
   
@@ -114,7 +104,7 @@ void loop() {
     for (int i = 0; i < PWMBoards[pwmIndex].numberOfServos; i++)
     {
         int deviceStatusFromJMRI = cmri.get_bit(i+PWMBoards[pwmIndex].CMRIIndexModifier);
-        if (deviceStatusFromJMRI != PWMBoards[pwmIndex].turnouts[i].lastKnownBitValue)
+        if (deviceStatusFromJMRI != PWMBoards[pwmIndex].turnouts[i].lastKnownBitValue || PWMBoards[pwmIndex].turnouts[i].motorHasNotMovedYet)
         {
           //Serial.println("Bit value change on board "+String(pwmIndex)+", device " + String(i) + " JMRI status "+String(deviceStatusFromJMRI)+" last known bit "+String( PWMBoards[pwmIndex].turnouts[i].lastKnownBitValue)+" motor not moved yet "+String(PWMBoards[pwmIndex].turnouts[i].motorHasNotMovedYet));
           if (deviceStatusFromJMRI == 1)
@@ -418,7 +408,8 @@ void InitialiseConfig() {
   PWMBoards[0].turnouts[2] = Turnout(1200,2100,7,true); //thrown, closed, invertfrog
   PWMBoards[0].turnouts[3] = Turnout(1150,2000,10,true); //thrown, closed, invertfrog 
   PWMBoards[0].turnouts[4] = Turnout(1250,1700,8,false); //thrown, closed, invertfrog 
-  PWMBoards[0].turnouts[5] = Turnout(1300,1810,9,true); //thrown, closed, invertfrog  
+  PWMBoards[0].turnouts[5] = Turnout(1200,1810,9,true); //thrown, closed, invertfrog  
+
   PWMBoards[0].turnouts[6] = Turnout(1200,1850,6,false); //thrown, closed, invertfrog  
   PWMBoards[0].turnouts[7] = Turnout(1250,2000,5,true); //thrown, closed, invertfrog  
 

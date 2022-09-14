@@ -86,16 +86,7 @@ void loop() {
     {
       startupDelayComplete = true;
       //Serial.println("Delay complete");
-      for (int pwmIndex = 0; pwmIndex < NumberOfPWMBoards; pwmIndex++) {
-        //for each servo on this PWM board
-        for (int i = 0; i < PWMBoards[pwmIndex].numberOfServos; i++)
-        {
-          if (!PWMBoards[pwmIndex].turnouts[i].hasFeedbackSensor) 
-          {
-            SetRelayAccordingToCMRIBitValue(pwmIndex,i,cmri.get_bit(i+PWMBoards[pwmIndex].CMRIIndexModifier));
-          }
-        }
-      }      
+
     }
   }
   
@@ -113,7 +104,8 @@ void loop() {
     for (int i = 0; i < PWMBoards[pwmIndex].numberOfServos; i++)
     {
         int deviceStatusFromJMRI = cmri.get_bit(i+PWMBoards[pwmIndex].CMRIIndexModifier);
-        if (deviceStatusFromJMRI != PWMBoards[pwmIndex].turnouts[i].lastKnownBitValue)
+        if (deviceStatusFromJMRI != PWMBoards[pwmIndex].turnouts[i].lastKnownBitValue || PWMBoards[pwmIndex].turnouts[i].motorHasNotMovedYet)
+
         {
           //Serial.println("Bit value change on board "+String(pwmIndex)+", device " + String(i) + " JMRI status "+String(deviceStatusFromJMRI)+" last known bit "+String( PWMBoards[pwmIndex].turnouts[i].lastKnownBitValue)+" motor not moved yet "+String(PWMBoards[pwmIndex].turnouts[i].motorHasNotMovedYet));
           if (deviceStatusFromJMRI == 1)
@@ -178,7 +170,7 @@ void ProcessPointsMove(int board, int pin, int requiredPosition, int cmriBitValu
 
                 if (fullyOn == true)
                 {
-                  //Serial.println("Fully on");
+                  //Serial.println("Fully on for board "+String(board)+" turnout "+String(pin)+" CMRI bit value "+String(cmriBitValue));
                   if (PWMBoards[board].turnouts[pin].invertFrog == false)
                   {
                       setPWMStateFullyOn(board, pin + 8);
@@ -190,7 +182,7 @@ void ProcessPointsMove(int board, int pin, int requiredPosition, int cmriBitValu
                 }
                 else
                 {
-                  //Serial.println("Fully off");
+                    //Serial.println("Fully off for board "+String(board)+" turnout "+String(pin)+" CMRI bit value "+String(cmriBitValue));
                     if (PWMBoards[board].turnouts[pin].invertFrog == false)
                     {
                         setPWMStateFullyOff(board, pin + 8);
@@ -347,7 +339,9 @@ void SetRelayAccordingToCMRIBitValue(int board, int pin, int cmriBitValue)
   bool fullyOn = cmriBitValue != 0;
   if (fullyOn == true)
   {
-    //Serial.println("Fully on ");
+
+    //Serial.println("Fully on at startup for board "+String(board)+" turnout "+String(pin)+" CMRI bit value "+String(cmriBitValue));
+
     if (PWMBoards[board].turnouts[pin].invertFrog == false)
     {
         setPWMStateFullyOn(board, pin + 8);
@@ -359,7 +353,8 @@ void SetRelayAccordingToCMRIBitValue(int board, int pin, int cmriBitValue)
   }
   else
   {
-    //Serial.println("Fully off");
+      //Serial.println("Fully off at startup for board "+String(board)+" turnout "+String(pin)+" CMRI bit value "+String(cmriBitValue));
+
       if (PWMBoards[board].turnouts[pin].invertFrog == false)
       {
           setPWMStateFullyOff(board, pin + 8);
