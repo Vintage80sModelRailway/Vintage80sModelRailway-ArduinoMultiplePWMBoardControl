@@ -6,6 +6,7 @@ Turnout::Turnout() {
   useSlowMotion = false;
   hasFeedbackSensor = false;
   motorHasNotMovedYet  = true;
+  currentPWMVal = 1500;
 }
 
 Turnout::Turnout(int ThrownVal, int ClosedVal) {
@@ -16,6 +17,7 @@ Turnout::Turnout(int ThrownVal, int ClosedVal) {
   hasFeedbackSensor = false;
   lastKnownBitValue = 0;
   motorHasNotMovedYet  = true;
+  currentPWMVal = 1500;
 }
 
 Turnout::Turnout(int ThrownVal, int ClosedVal, bool InvertFrog) {
@@ -28,9 +30,10 @@ Turnout::Turnout(int ThrownVal, int ClosedVal, bool InvertFrog) {
   lastKnownBitValue = 0;
   motorHasNotMovedYet  = true;
   relayHasNotBeenSetYet = true;
+  currentPWMVal = 1500;
 }
 
-Turnout::Turnout(int ThrownVal, int ClosedVal, int FeedbackSensorPin) {
+Turnout::Turnout(int ThrownVal, int ClosedVal, int FeedbackSensorPin, bool InvertFeedbackSensor) {
   thrownVal = ThrownVal;
   closedVal = ClosedVal;
   feedbackSensorPin = FeedbackSensorPin;
@@ -41,9 +44,11 @@ Turnout::Turnout(int ThrownVal, int ClosedVal, int FeedbackSensorPin) {
   motorHasNotMovedYet  = true;
   inDebounce = false;
   millisAtLastChange = 5000;
+  currentPWMVal = 1500;
+  invertFeedbackSensor = InvertFeedbackSensor;
 }
 
-Turnout::Turnout(int ThrownVal, int ClosedVal, int FeedbackSensorPin, bool InvertFrog) {
+Turnout::Turnout(int ThrownVal, int ClosedVal, int FeedbackSensorPin, bool InvertFrog, bool InvertFeedbackSensor) {
   thrownVal = ThrownVal;
   closedVal = ClosedVal;
   feedbackSensorPin = FeedbackSensorPin;
@@ -56,6 +61,8 @@ Turnout::Turnout(int ThrownVal, int ClosedVal, int FeedbackSensorPin, bool Inver
   millisAtLastChange = 5000;
   inDebounce = false;
   relayHasNotBeenSetYet = true;
+  currentPWMVal = 1500;
+  invertFeedbackSensor = InvertFeedbackSensor;
 }
 
 Turnout::Turnout(int ThrownVal, int ClosedVal, int StepSize, int DelayTime) {
@@ -68,9 +75,10 @@ Turnout::Turnout(int ThrownVal, int ClosedVal, int StepSize, int DelayTime) {
   hasFeedbackSensor = false;
   lastKnownBitValue = 0;
   motorHasNotMovedYet  = true;
+  currentPWMVal = 1500;
 }
 
-Turnout::Turnout(int ThrownVal, int ClosedVal, int StepSize, int DelayTime, int FeedbackSensorPin) {
+Turnout::Turnout(int ThrownVal, int ClosedVal, int StepSize, int DelayTime, int FeedbackSensorPin, bool InvertFeedbackSensor) {
   thrownVal = ThrownVal;
   closedVal = ClosedVal;
   useSlowMotion = true;
@@ -83,6 +91,8 @@ Turnout::Turnout(int ThrownVal, int ClosedVal, int StepSize, int DelayTime, int 
   motorHasNotMovedYet  = true;
   millisAtLastChange = 5000;
   inDebounce = false;
+  currentPWMVal = 1500;
+  invertFeedbackSensor = InvertFeedbackSensor;
 }
 
 Turnout::Turnout(int ThrownVal, int ClosedVal, int StepSize, int DelayTime, bool InvertFrog) {
@@ -97,9 +107,10 @@ Turnout::Turnout(int ThrownVal, int ClosedVal, int StepSize, int DelayTime, bool
   lastKnownBitValue = 0;
   motorHasNotMovedYet  = true;
   relayHasNotBeenSetYet = true;
+  currentPWMVal = 1500;
 }
 
-Turnout::Turnout(int ThrownVal, int ClosedVal, int StepSize, int DelayTime, int FeedbackSensorPin, bool InvertFrog) {
+Turnout::Turnout(int ThrownVal, int ClosedVal, int StepSize, int DelayTime, int FeedbackSensorPin, bool InvertFrog, bool InvertFeedbackSensor) {
   thrownVal = ThrownVal;
   closedVal = ClosedVal;
   invertFrog = InvertFrog;
@@ -114,4 +125,6 @@ Turnout::Turnout(int ThrownVal, int ClosedVal, int StepSize, int DelayTime, int 
   millisAtLastChange = 5000;
   inDebounce = false;
   relayHasNotBeenSetYet = true;
+  currentPWMVal = 1500;
+  invertFeedbackSensor = InvertFeedbackSensor;
 }

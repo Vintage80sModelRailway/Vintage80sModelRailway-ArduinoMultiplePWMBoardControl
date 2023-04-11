@@ -20,6 +20,7 @@ class Turnout {
     bool needsFrogPolarityControl;
     bool invertFrog;
     bool hasFeedbackSensor;
+    bool invertFeedbackSensor;
     bool motorHasNotMovedYet;
     bool inDebounce;
     bool relayHasNotBeenSetYet;
@@ -28,16 +29,16 @@ class Turnout {
     
     Turnout();
     Turnout(int ThrownVal, int ClosedVal);
-    Turnout(int ThrownVal, int ClosedVal, int FeedbackSensorPin);
+    Turnout(int ThrownVal, int ClosedVal, int FeedbackSensorPin, bool InvertFeedbackSensor);
     
     Turnout(int ThrownVal, int ClosedVal, bool InvertFrog);
-    Turnout(int ThrownVal, int ClosedVal, int FeedbackSensorPin, bool InvertFrog);
+    Turnout(int ThrownVal, int ClosedVal, int FeedbackSensorPin, bool InvertFrog, bool InvertFeedbackSensor);
     
     Turnout(int ThrownVal, int ClosedVal, int StepSize, int DelayTime);
-    Turnout(int ThrownVal, int ClosedVal, int StepSize, int DelayTime, int FeedbackSensorPin);
+    Turnout(int ThrownVal, int ClosedVal, int StepSize, int DelayTime, int FeedbackSensorPin, bool InvertFeedbackSensor);
     
     Turnout(int ThrownVal, int ClosedVal, int StepSize, int DelayTime, bool InvertFrog);
-    Turnout(int ThrownVal, int ClosedVal, int StepSize, int DelayTime, int FeedbackSensorPin, bool InvertFrog);
+    Turnout(int ThrownVal, int ClosedVal, int StepSize, int DelayTime, int FeedbackSensorPin, bool InvertFrog, bool InvertFeedbackSensor);
     
 };
 

@@ -5,14 +5,16 @@
 #include <Arduino.h>
 #include <Adafruit_PWMServoDriver.h>
 #include "Turnout.h"
+//#include "ListLib.h"
 
 class PWMBoard {
   private:
 
 
   public: 
-    int numberOfServos;
+    int numberOfTurnouts;
     int CMRIIndexModifier;
+    //List<Turnout> turnouts;
     Turnout turnouts[8];
     Adafruit_PWMServoDriver pwm;  
 };

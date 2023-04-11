@@ -9,10 +9,10 @@
 class PWMBoard {
   private:
 
-
   public: 
-    int numberOfServos;
+    int numberOfTurnouts;
     int CMRIIndexModifier;
+    //List<Turnout> turnouts;
     Turnout turnouts[8];
     Adafruit_PWMServoDriver pwm;  
 };
