@@ -35,7 +35,7 @@ Auto485 bus(DE_PIN, RE_PIN, Serial1);
 CMRI cmri(CMRI_ADDR, 72, 72, bus);
 
 void setup() {
-  
+
   bus.begin(19200, SERIAL_8N2);
   InitialiseConfig();
   SetPinModes();
@@ -102,44 +102,44 @@ void loop() {
       }
     }
   }
-  
+
   //for each PWM board
   for (int pwmIndex = 0; pwmIndex < NumberOfPWMBoards; pwmIndex++) {
     //for each servo on this PWM board
     for (int i = 0; i < PWMBoards[pwmIndex].numberOfTurnouts; i++)
     {
-      bool moveIsComplete=false;
+      bool moveIsComplete = false;
       int deviceStatusFromJMRI = cmri.get_bit(i + PWMBoards[pwmIndex].CMRIIndexModifier);
       if (deviceStatusFromJMRI != PWMBoards[pwmIndex].turnouts[i].lastKnownBitValue || PWMBoards[pwmIndex].turnouts[i].motorHasNotMovedYet)
-      {        
+      {
         numberOfServosMoving++;
         if (PWMBoards[pwmIndex].turnouts[i].useSlowMotion == true) {
-             moveIsComplete = PWMBoards[pwmIndex].turnouts[i].ProcessPointsMoveWithSpeedControl(PWMBoards[pwmIndex].pwm, deviceStatusFromJMRI, i, numberOfServosMovingLastLoop, servoSpeedMultiplier);
-          }
-          else {
-            PWMBoards[pwmIndex].turnouts[i].ProcessPointsMove(PWMBoards[pwmIndex].pwm, deviceStatusFromJMRI,i);
-            moveIsComplete=true;
-          }
+          moveIsComplete = PWMBoards[pwmIndex].turnouts[i].ProcessPointsMoveWithSpeedControl(PWMBoards[pwmIndex].pwm, deviceStatusFromJMRI, i, numberOfServosMovingLastLoop, servoSpeedMultiplier);
+        }
+        else {
+          PWMBoards[pwmIndex].turnouts[i].ProcessPointsMove(PWMBoards[pwmIndex].pwm, deviceStatusFromJMRI, i);
+          moveIsComplete = true;
+        }
         if (OutputToSerial) {
           //Serial.println("Set last known value for board "+String(pwmIndex)+" turnout "+String(i)+" to "+String(deviceStatusFromJMRI));
-        }   
+        }
       }
-       
+
       //set feedback sensor bit if using - only need to set when a points motor has not moved
-        if (PWMBoards[pwmIndex].turnouts[i].hasFeedbackSensor) {
-          int inputPin = PWMBoards[pwmIndex].turnouts[i].feedbackSensorPin;
-          bool pinValue = false;
-          if (PWMBoards[pwmIndex].turnouts[i].invertFeedbackSensor == true) {
-            pinValue = !digitalRead(inputPin);
-          }
-          else {
-            pinValue = digitalRead(inputPin);
-          }
-          if (OutputToSerial) {
-            //Serial.println("Setting feedback sensor for CMRI bit "+String(i+PWMBoards[pwmIndex].CMRIIndexModifier)+" to "+String(pinValue));
-          }
-          cmri.set_bit(i + PWMBoards[pwmIndex].CMRIIndexModifier, pinValue);
-        }      
+      if (PWMBoards[pwmIndex].turnouts[i].hasFeedbackSensor) {
+        int inputPin = PWMBoards[pwmIndex].turnouts[i].feedbackSensorPin;
+        bool pinValue = false;
+        if (PWMBoards[pwmIndex].turnouts[i].invertFeedbackSensor == true) {
+          pinValue = !digitalRead(inputPin);
+        }
+        else {
+          pinValue = digitalRead(inputPin);
+        }
+        if (OutputToSerial) {
+          //Serial.println("Setting feedback sensor for CMRI bit "+String(i+PWMBoards[pwmIndex].CMRIIndexModifier)+" to "+String(pinValue));
+        }
+        cmri.set_bit(i + PWMBoards[pwmIndex].CMRIIndexModifier, pinValue);
+      }
     }
   }
   ProcessInputs();
@@ -153,22 +153,22 @@ void SetSensorFeedbackReadings() {
     for (int i = 0; i < PWMBoards[pwmIndex].numberOfTurnouts; i++)
     {
       if (PWMBoards[pwmIndex].turnouts[i].hasFeedbackSensor) {
-      int inputPin = PWMBoards[pwmIndex].turnouts[i].feedbackSensorPin;
-      bool pinValue = false;
-      if (PWMBoards[pwmIndex].turnouts[i].invertFeedbackSensor == true) {
-        pinValue = !digitalRead(inputPin);
-      }
-      else {
-        pinValue = digitalRead(inputPin);
-      }
-      PWMBoards[pwmIndex].turnouts[i].SetRelayAccordingToFeedbackSensor(PWMBoards[pwmIndex].pwm, i, pinValue, feedbackDebounce);
-      cmri.set_bit(i + PWMBoards[pwmIndex].CMRIIndexModifier, pinValue);
+        int inputPin = PWMBoards[pwmIndex].turnouts[i].feedbackSensorPin;
+        bool pinValue = false;
+        if (PWMBoards[pwmIndex].turnouts[i].invertFeedbackSensor == true) {
+          pinValue = !digitalRead(inputPin);
+        }
+        else {
+          pinValue = digitalRead(inputPin);
+        }
+        PWMBoards[pwmIndex].turnouts[i].SetRelayAccordingToFeedbackSensor(PWMBoards[pwmIndex].pwm, i, pinValue, feedbackDebounce);
+        cmri.set_bit(i + PWMBoards[pwmIndex].CMRIIndexModifier, pinValue);
 
-      if (OutputToSerial) {
-        //Serial.println("Set sensor feedback just set lastKnownBitValue");
-        //Serial.println("Set CMRI bit " + String(i + PWMBoards[pwmIndex].CMRIIndexModifier) + " for board " + String(pwmIndex) + " turnout " + String(i) + " Arduino pin " + String(inputPin) + " value " + String(pinValue));
-        //Serial.println("Get CMRI bit during startup pause "+String(i+PWMBoards[pwmIndex].CMRIIndexModifier)+" for board "+String(pwmIndex)+" turnout "+String(i)+" value "+String(cmri.get_bit(i+PWMBoards[pwmIndex].CMRIIndexModifier)));
-      }
+        if (OutputToSerial) {
+          //Serial.println("Set sensor feedback just set lastKnownBitValue");
+          //Serial.println("Set CMRI bit " + String(i + PWMBoards[pwmIndex].CMRIIndexModifier) + " for board " + String(pwmIndex) + " turnout " + String(i) + " Arduino pin " + String(inputPin) + " value " + String(pinValue));
+          //Serial.println("Get CMRI bit during startup pause "+String(i+PWMBoards[pwmIndex].CMRIIndexModifier)+" for board "+String(pwmIndex)+" turnout "+String(i)+" value "+String(cmri.get_bit(i+PWMBoards[pwmIndex].CMRIIndexModifier)));
+        }
       }
     }
   }
@@ -182,7 +182,7 @@ void ProcessShiftOut() {
 
   shiftOut(dataPinOut, clockPinOut, MSBFIRST, val2);
   shiftOut(dataPinOut, clockPinOut, MSBFIRST, val1);
-  digitalWrite(latchPinOut, HIGH);  
+  digitalWrite(latchPinOut, HIGH);
 }
 
 void SetPinModes()
@@ -195,14 +195,17 @@ void InitialiseConfig() {
   PWMBoards[0].pwm = Adafruit_PWMServoDriver();
   PWMBoards[0].numberOfTurnouts = 8;
   PWMBoards[0].CMRIIndexModifier = 0;
-  PWMBoards[0].turnouts[0] = Turnout(1000,1800,1,10); //thrown, closed,slow speed step, slow speed delay
-  PWMBoards[0].turnouts[1] = Turnout(1150,1650,1,10); 
-  PWMBoards[0].turnouts[2] = Turnout(1200,2100,1,10); 
-  PWMBoards[0].turnouts[3] = Turnout(1150,2000,1,10); 
-  PWMBoards[0].turnouts[4] = Turnout(1250,1700,1,10);
-  PWMBoards[0].turnouts[5] = Turnout(1200,1810,1,10);
-  PWMBoards[0].turnouts[6] = Turnout(1200,1850,1,10);
-  PWMBoards[0].turnouts[7] = Turnout(1250,2000,1,10);
+
+  //Instantiators are where the config happens for each board and turnout
+  //See Turnout.h for all possible config
+  PWMBoards[0].turnouts[0] = Turnout(1000, 1800, 1, 10); //thrown, closed,slow speed step, slow speed delay
+  PWMBoards[0].turnouts[1] = Turnout(1150, 1650, 1, 10);
+  PWMBoards[0].turnouts[2] = Turnout(1200, 2100, 1, 10);
+  PWMBoards[0].turnouts[3] = Turnout(1150, 2000, 1, 10);
+  PWMBoards[0].turnouts[4] = Turnout(1250, 1700, 1, 10);
+  PWMBoards[0].turnouts[5] = Turnout(1200, 1810, 1, 10);
+  PWMBoards[0].turnouts[6] = Turnout(1200, 1850, 1, 10);
+  PWMBoards[0].turnouts[7] = Turnout(1250, 2000, 1, 10);
 
   PWMBoards[0].pwm.begin();
   PWMBoards[0].pwm.setPWMFreq(50);  // This is the maximum PWM frequency
