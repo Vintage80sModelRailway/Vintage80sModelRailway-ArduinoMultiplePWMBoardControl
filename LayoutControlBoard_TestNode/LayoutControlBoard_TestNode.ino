@@ -191,7 +191,7 @@ void SetPinModes()
 }
 
 void InitialiseConfig() {
-  //Board 1 - under lower incline junction
+  //Test board
   PWMBoards[0].pwm = Adafruit_PWMServoDriver();
   PWMBoards[0].numberOfTurnouts = 8;
   PWMBoards[0].CMRIIndexModifier = 0;
@@ -208,7 +208,7 @@ void InitialiseConfig() {
   PWMBoards[0].turnouts[7] = Turnout(1250, 2000, 1, 10);
 
   PWMBoards[0].pwm.begin();
-  PWMBoards[0].pwm.setPWMFreq(50);  // This is the maximum PWM frequency
+  PWMBoards[0].pwm.setPWMFreq(50);
   PWMBoards[0].pwm.setOscillatorFrequency(25000000);
 
 }
