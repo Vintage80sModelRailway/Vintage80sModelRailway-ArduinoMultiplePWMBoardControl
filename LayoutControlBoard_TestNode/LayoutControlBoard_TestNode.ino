@@ -12,7 +12,6 @@ int feedbackDebounce = 0;
 unsigned long startupDelayMillis = 0;
 unsigned long startupMillis;
 bool startupDelayComplete;
-const bool ProtectMotors = false;
 const bool OutputToSerial = true;
 int numberOfServosMoving = 0;
 int numberOfServosMovingLastLoop = 0;
@@ -32,8 +31,8 @@ int clockPinOut = 30;
 PWMBoard PWMBoards[NumberOfPWMBoards];
 
 //Only use Serial1 on a Mega as it has multiple serial buses
-Auto485 bus(DE_PIN, RE_PIN, Serial1); // Arduino pin 2 -> MAX485 DE and RE pins
-CMRI cmri(CMRI_ADDR, 72, 72, bus); // defaults to a SMINI with address 0. SMINI = 24 inputs, 48 outputs
+Auto485 bus(DE_PIN, RE_PIN, Serial1);
+CMRI cmri(CMRI_ADDR, 72, 72, bus);
 
 void setup() {
   
