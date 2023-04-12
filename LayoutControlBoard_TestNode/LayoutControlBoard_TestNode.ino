@@ -17,6 +17,11 @@ int numberOfServosMoving = 0;
 int numberOfServosMovingLastLoop = 0;
 int servoSpeedMultiplier = 1;
 
+int load = 38;
+int clockEnablePin = 39;
+int dataIn = 40;
+int clockIn = 41;
+
 ////Pin connected to DS of 74HC595 - SERIN
 int dataPinOut = 32;
 //Pin connected to ST_CP of 74HC595 - RCLCK
@@ -51,8 +56,10 @@ void setup() {
 
   while (!cmriIsInitialised) {
     //Get CMRI data ready for when CMRI does come online
+    digitalWrite(load, LOW);
     SetSensorFeedbackReadings();
     ProcessInputs();
+    ReadFromShiftRegister();
     cmriIsInitialised = cmri.process();
   }
 
@@ -72,6 +79,7 @@ void loop() {
   //Then everything should get set to how it currently is with no craziness
   bool cmriIsRunning = cmri.process();
   numberOfServosMoving = 0;
+  digitalWrite(load, LOW);
 
   if (OutputToSerial) {
     // Serial.println("Result of process: "+String(cmriIsRunning));
@@ -144,6 +152,7 @@ void loop() {
   }
   ProcessInputs();
   ProcessShiftOut();
+  ReadFromShiftRegister();
   numberOfServosMovingLastLoop = numberOfServosMoving;
 }
 
@@ -185,6 +194,21 @@ void ProcessShiftOut() {
   digitalWrite(latchPinOut, HIGH);
 }
 
+void ReadFromShiftRegister() {
+  //digitalWrite(load, LOW);
+  digitalWrite(load, HIGH);
+
+  // Get data from 74HC165
+  digitalWrite(clockIn, HIGH);
+  digitalWrite(clockEnablePin, LOW);
+  byte data1 = shiftIn(dataIn, clockIn, MSBFIRST);
+  byte data2 = shiftIn(dataIn, clockIn, MSBFIRST);
+  digitalWrite(clockEnablePin, HIGH);
+
+  cmri.set_byte(5, data1);
+  cmri.set_byte(6, data2);
+}
+
 void SetPinModes()
 {
 
@@ -198,14 +222,14 @@ void InitialiseConfig() {
 
   //Instantiators are where the config happens for each board and turnout
   //See Turnout.h for all possible config
-  PWMBoards[0].turnouts[0] = Turnout(1000, 1800, 1, 10); //thrown, closed,slow speed step, slow speed delay
-  PWMBoards[0].turnouts[1] = Turnout(1150, 1650, 1, 10);
-  PWMBoards[0].turnouts[2] = Turnout(1200, 2100, 1, 10);
-  PWMBoards[0].turnouts[3] = Turnout(1150, 2000, 1, 10);
-  PWMBoards[0].turnouts[4] = Turnout(1250, 1700, 1, 10);
-  PWMBoards[0].turnouts[5] = Turnout(1200, 1810, 1, 10);
-  PWMBoards[0].turnouts[6] = Turnout(1200, 1850, 1, 10);
-  PWMBoards[0].turnouts[7] = Turnout(1250, 2000, 1, 10);
+  PWMBoards[0].turnouts[0] = Turnout(1000, 1800, 1, 5); //thrown, closed,slow speed step, slow speed delay
+  PWMBoards[0].turnouts[1] = Turnout(1150, 1650, 1, 5);
+  PWMBoards[0].turnouts[2] = Turnout(1200, 2100, 1, 5);
+  PWMBoards[0].turnouts[3] = Turnout(1150, 2000, 1, 5);
+  PWMBoards[0].turnouts[4] = Turnout(1250, 1700, 1, 5);
+  PWMBoards[0].turnouts[5] = Turnout(1200, 1810, 1, 5);
+  PWMBoards[0].turnouts[6] = Turnout(1200, 1850, 1, 5);
+  PWMBoards[0].turnouts[7] = Turnout(1250, 2000, 1, 5);
 
   PWMBoards[0].pwm.begin();
   PWMBoards[0].pwm.setPWMFreq(50);
