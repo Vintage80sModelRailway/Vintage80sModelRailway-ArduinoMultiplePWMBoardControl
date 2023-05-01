@@ -11,8 +11,8 @@
 #include <MQTT.h>
 #include "Sensor.h"
 
-const char ssid[] = "BTHub4-C5Q8";
-const char pass[] = "db6d389eb9";
+const char ssid[] = "oops";
+const char pass[] = "oops";
 
 #define NumberOfSensors 1
 Sensor Sensors[NumberOfSensors];
